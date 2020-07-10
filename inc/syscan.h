@@ -10,6 +10,11 @@
 #include <math.h>
 #include <time.h>
 #include <usb.h>
+#include <ifaddrs.h>
+#include <sys/types.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <linux/wireless.h>
 
 #define MAX_COLS_LEN 100
 
