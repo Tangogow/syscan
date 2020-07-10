@@ -60,7 +60,8 @@ void menu() {
 int main(int ac, char **av) {
   //clearScreen();
   //menuBanner(30, "Syscan ");
-  lsusb();
+  //lsusb();
+  lscpu();
   //menu();
 	return 0;
 }
