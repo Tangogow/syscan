@@ -1,47 +1,37 @@
 #include "syscan.h"
 
-int check_wireless(const char* ifname, char* protocol) {
-  int sock = -1;
-  struct iwreq pwrq;
-  memset(&pwrq, 0, sizeof(pwrq));
-  strncpy(pwrq.ifr_name, ifname, IFNAMSIZ);
-
-  if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-    perror("socket");
-    return 0;
-  }
-
-  if (ioctl(sock, SIOCGIWNAME, &pwrq) != -1) {
-    if (protocol) strncpy(protocol, pwrq.u.name, IFNAMSIZ);
-    close(sock);
-    return 1;
-  }
-  close(sock);
-  return 0;
-}
-
-
-int lsip() {
+void lsip()
+{
   struct ifaddrs *ifaddr, *ifa;
+  int family, s;
+  char host[NI_MAXHOST];
 
   if (getifaddrs(&ifaddr) == -1) {
     perror("getifaddrs");
-    return -1;
+    exit(EXIT_FAILURE);
   }
-
-  /* Walk through linked list, maintaining head pointer so we
-     can free list later */
   for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
-    char protocol[IFNAMSIZ]  = {0};
-    if (ifa->ifa_addr == NULL ||
-        ifa->ifa_addr->sa_family != AF_PACKET) continue;
-    if (check_wireless(ifa->ifa_name, protocol)) {
-      printf("interface %s is wireless: %s\n", ifa->ifa_name, protocol);
-    } else {
-      printf("interface %s is not wireless\n", ifa->ifa_name);
+    family = ifa->ifa_addr->sa_family;
+    if (family == AF_INET) {
+      printf("\n%s", ifa->ifa_name);
+      getnameinfo(ifa->ifa_addr, sizeof(struct sockaddr_in), host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+      printf("\tinet: %s\t", host);
+      getnameinfo(ifa->ifa_netmask, sizeof(struct sockaddr_in), host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+      printf("\tmask: %s\t", host);
+      getnameinfo(ifa->ifa_broadaddr, sizeof(struct sockaddr_in), host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+      printf("\tbroad: %s", host);
+      /*if (((ifaptr)->ifa_addr)->sa_family == AF_LINK) {
+        ptr = (unsigned char *)LLADDR((struct sockaddr_dl *)(ifaptr)->ifa_addr);
+        printf("%s: %02x:%02x:%02x:%02x:%02x:%02x\n",
+        (ifaptr)->ifa_name,
+        *ptr, *(ptr+1), *(ptr+2), *(ptr+3), *(ptr+4), );*(ptr+5));
+      }*/
+    }
+    else if (family == AF_INET6) {
+      printf("\n");
+      getnameinfo(ifa->ifa_addr, sizeof(struct sockaddr_in6), host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+      printf("\tinet6: %s\n", host);
     }
   }
-
   freeifaddrs(ifaddr);
-  return 0;
 }

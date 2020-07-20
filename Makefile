@@ -26,4 +26,4 @@ re:		clean all
 
 debug:
 	$(CC) -g -o $(NAME) $(SRC) $(INC) $(CFLAGS) $(LDFLAGS) $(DEBUG)
-	@echo "**DEBUG-MOED**"
+	@echo "**DEBUG-MODE**"

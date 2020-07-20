@@ -14,7 +14,15 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
-#include <linux/wireless.h>
+//#include <linux/wireless.h> //conflit net/if
+#include <arpa/inet.h>
+#define _GNU_SOURCE
+#include <netdb.h>
+#include <ifaddrs.h>
+#include <linux/if_link.h>
+#include <sys/utsname.h>
+#include <sys/resource.h>
+#include <blkid/blkid.h>
 
 #define MAX_COLS_LEN 100
 
@@ -24,6 +32,11 @@
 #else
 #define CLEAR "clear"
 #endif
+
+typedef struct usbID {
+  char *vendor;
+  char *product;
+};
 
 /* utils.c */
 int checkIfStrOdd(int, char *);

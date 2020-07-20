@@ -6,8 +6,6 @@ void clearScreen() {
 }
 
 void quit() {
-  //if (list)
-  //  freeAll(&list);
   printf("Quitter\n");
   exit(0);
 }
@@ -37,6 +35,7 @@ void backToMenu() {
     quit();
 }
 
+
 void menu() {
   menuText();
   int choice = 0;
@@ -45,7 +44,35 @@ void menu() {
     choice = getInt(1, 1, 9, "Entrez votre choix");
     switch (choice) {
       case 1:
-        // start
+        lsusb();
+        backToMenu();
+        break;
+      case 2:
+        lscpu();
+        backToMenu();
+        break;
+      case 3:
+        lsip();
+        backToMenu();
+        break;
+      case 4:
+        lsuname();
+        backToMenu();
+        break;
+      case 5:
+        lsrelease();
+        backToMenu();
+        break;
+      case 6:
+        lsmeminfo();
+        backToMenu();
+        break;
+      case 7:
+        lsram();
+        backToMenu();
+        break;
+      case 8:
+        lspart();
         backToMenu();
         break;
       default:
@@ -60,8 +87,6 @@ void menu() {
 int main(int ac, char **av) {
   //clearScreen();
   //menuBanner(30, "Syscan ");
-  //lsusb();
-  lscpu();
-  //menu();
+  menu();
 	return 0;
 }

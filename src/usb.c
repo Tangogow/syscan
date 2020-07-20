@@ -34,40 +34,33 @@ char *getUSBIDs() {
   return p;
 }
 
-char **getVendorAndProduct(char *buf, char *vendorID, char *productID) {
-  printf("=== %s - %s", vendorID, productID);
-  /*char newline[5] = "\n";
+struct usbID getVendorAndProduct(char *buf, char *vendorID, char *productID, struct usbID usbInfo) {
+  char newline[5] = "\n";
 
   strcat(newline, vendorID);
-
-  printf("-%s-\n", newline);
   char *res;
-  //if ((res = strstr(buf, newline)) == NULL)
-  //  printf("NULL");
-  printf("%s", strstr(buf, newline));
-  printf("[%s]", res);
+
+  if ((res = strstr(buf, newline)) == NULL) {
+    usbInfo.vendor = malloc(sizeof(char) * 2);
+    usbInfo.product = malloc(sizeof(char) * 2);
+    strcpy(usbInfo.vendor, "?");
+    strcpy(usbInfo.product, "?");
+    return usbInfo;
+  }
+
   const char *delim = "\n";
   char *strToken = strtok(res, delim);
-  printf("<%s>", strToken);
-
-  char **arr = malloc(100);
-  arr[0] = malloc(100);
-  arr[1] = malloc(100);
-
-
   strToken += 6;
-  arr[0] = malloc(sizeof(char) * strlen(strToken));
-  strcpy(arr[0], strToken);
+  usbInfo.vendor = malloc(sizeof(char) * strlen(strToken));
+  strcpy(usbInfo.vendor, strToken);
 
-  while (strstr(strToken, productID) == 0)
+  /*while (strstr(strToken, productID) != 0)
     strToken = strtok(NULL, delim);
-
-  printf("<%s>", strToken);
-
-  /*strToken += 7;
-  arr[1] = malloc(sizeof(char) * strlen(strToken));
-  strcpy(arr[1], strToken);*/
-  //return arr;*/
+  strToken += 7;*/
+  strToken = "";
+  usbInfo.product = malloc(sizeof(char) * strlen(strToken));
+  strcpy(usbInfo.product, strToken);
+  return usbInfo;
 }
 
 char *getClassUsage(int base) {
@@ -93,34 +86,34 @@ void lsusb() {
   usb_find_busses();
   usb_find_devices();
 
+  struct usbID usbInfo;
+
   for (bus = usb_busses; bus; bus = bus->next)
     for (dev = bus->devices; dev; dev = dev->next) {
-      char product[19];
+      char product[5];
+      char vendor[5];
       snprintf(product, 10, "%04x", dev->descriptor.idProduct);
-      snprintf(product, 5, "%04x", dev->descriptor.idVendor);
-      //printf("%s\n", product);
-      //snprintf(vendor, 5, "%04x", dev->descriptor.idVendor);
-      //printf("%s - %s | %x %x\n", vendor, product, dev->descriptor.idVendor, dev->descriptor.idProduct);
-      //getVendorAndProduct(usbid, vendor, product);
-      //printf("%s : %s\n", info[0], info[1]);
+      snprintf(vendor, 5, "%04x", dev->descriptor.idVendor);
+
+      usbInfo = getVendorAndProduct(getUSBIDs(), vendor, product, usbInfo);
       printf("Bus %s"
       " Device %s:"
       " ID %04x:%04x "
       " USB: v%2x.%01x"
       " Class: %x %s %s"
       " Subclass: %x"
-      " Protocol: %x\n",
+      " Protocol: %x"
+      " %s\n",
       bus->dirname,
       dev->filename,
       dev->descriptor.idVendor,
       dev->descriptor.idProduct,
-      //info[0],
-      //info[1],
       dev->descriptor.bcdUSB >> 8, dev->descriptor.bcdUSB & 0xff,
       dev->descriptor.bDeviceClass,
       getClassUsage(dev->descriptor.bDeviceClass),
       getClassDescription(dev->descriptor.bDeviceClass),
       dev->descriptor.bDeviceSubClass,
-      dev->descriptor.bDeviceProtocol);
+      dev->descriptor.bDeviceProtocol,
+      usbInfo.vendor);
     }
 }

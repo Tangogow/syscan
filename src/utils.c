@@ -180,7 +180,7 @@ char *readFile(const char *name, char *buf) {
       error(1, 1, "ftell err");
     if (fseek(fp, 0, SEEK_SET) != 0)
       error(1, 1, "fseek set");
-    //buf = malloc(len * sizeof(char));
+    //sbuf = malloc(len * sizeof(char));
     fread(buf, sizeof(char), len, fp);
     fclose(fp);
   }

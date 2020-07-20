@@ -85,13 +85,12 @@ void menuBanner(int width, char *text) {
 
 void menuText() {
   printf("    --- MENU ---\n");
-  printf("1: Lister élèves\n");
-  printf("2: Ajouter élève\n");
-  printf("3: Supprimer élève\n");
-  printf("4: Modifier élève\n");
-  printf("5: Ajouter note\n");
-  printf("6: Details élève\n");
-  printf("7: Sauvegarder\n");
-  printf("8: Charger\n");
-  printf("9: Quitter\n\n");
+  printf("1. Interfaces USB\n");
+  printf("2. CPU Info\n");
+  printf("3. Interfaces réseaux\n");
+  printf("4. Informations système\n");
+  printf("5. Release\n");
+  printf("6. Informations mémoire\n");
+  printf("7. Utilisation RAM\n");
+  printf("8. Partitionnement\n");
 }
