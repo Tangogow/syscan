@@ -8,3 +8,4 @@
 
 libusb-dev
 update-usbids
+libblkid-dev

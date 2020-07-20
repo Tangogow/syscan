@@ -85,8 +85,8 @@ void menu() {
 }
 
 int main(int ac, char **av) {
-  //clearScreen();
-  //menuBanner(30, "Syscan ");
+  clearScreen();
+  menuBanner(30, "Syscan");
   menu();
 	return 0;
 }
