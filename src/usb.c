@@ -80,7 +80,6 @@ char *getClassDescription(int base) {
 void lsusb() {
   struct usb_bus *bus;
   struct usb_device *dev;
-  char *usbid = getUSBIDs();
 
   usb_init();
   usb_find_busses();
